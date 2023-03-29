@@ -1,11 +1,43 @@
+/**
+ * @author Karthikeyan C
+ * @version 1.0
+ */
+
 // Importing the required file
 const fs = require("fs");
 
 exports.getRandom = (requested_count) => {
   // Loading the color palette
-  const colorPalette = JSON.parse(
-    fs.readFileSync("./color_ palette.json", "utf-8")
-  );
+  // returns empty list if file not found
+  let colorPaletteRaw;
+  let isEmpty = false;
+  try {
+    colorPaletteRaw = fs.readFileSync("./color_ palette.json", "utf-8");
+  } catch (error) {
+    if (error.code == "ENOENT") {
+      isEmpty = true;
+    }
+  }
+  if (!isEmpty) {
+    try {
+      const colorPalette = JSON.parse(colorPaletteRaw);
+
+      // Logging the color palette
+      console.log("ColorPalette: ", colorPalette);
+
+      let randomColors = get_random_colors(colorPalette, 5);
+
+      if (randomColors.length !== 0) {
+        return randomColors;
+      } else {
+        return "RandomColors is empty, aborting write process";
+      }
+    } catch (error) {
+      return "Unable to parse JSON, check file is empty or invalid format";
+    }
+  } else {
+    return "File Not Found, aborting the process";
+  }
 
   /**
    * Function to get n random numbers
@@ -40,7 +72,7 @@ exports.getRandom = (requested_count) => {
     return result;
   }
 
-  // Return random colors
-  let randomColors = get_random_colors(colorPalette, requested_count);
-  return randomColors;
+  // // Return random colors
+  // let randomColors = get_random_colors(colorPalette, requested_count);
+  // return randomColors;
 };

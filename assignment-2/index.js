@@ -2,16 +2,17 @@ let http = require("http");
 let url = require("url");
 let colorData = require("./data");
 http
-  .createServer((req, res, err) => {
-    if (err) {
-      console.log(err);
+  .createServer((request, response, error) => {
+    if (error) {
+      console.log(error);
       return;
     }
-    if (res === "localhost://4000") {
+    if (response === "localhost://4000") {
       return;
     }
     let data = colorData.getRandom(5);
-    res.write(JSON.stringify(data));
-    res.end();
+    console.log(data);
+    response.write(JSON.stringify(data));
+    response.end();
   })
   .listen(4000);
