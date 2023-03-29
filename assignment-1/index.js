@@ -15,20 +15,44 @@ const fs = require("fs");
 // Loading the color palette
 // returns empty list if file not found
 let colorPaletteRaw;
+let isEmpty = false;
 try {
   colorPaletteRaw = fs.readFileSync("./color_ palette.json", "utf-8");
 } catch (error) {
   if (error.code == "ENOENT") {
-    console.log("File Not Found");
-    colorPaletteRaw = "[]";
+    isEmpty = true;
   }
 }
 
-const colorPalette = JSON.parse(colorPaletteRaw);
+if (!isEmpty) {
+  try {
+    const colorPalette = JSON.parse(colorPaletteRaw);
 
-// Logging the color palette
-console.log("ColorPalette: ", colorPalette);
+    // Logging the color palette
+    console.log("ColorPalette: ", colorPalette);
 
+    let randomColors = get_random_colors(colorPalette, 5);
+
+    if (randomColors.length !== 0) {
+      // Writing the random colors into the file
+      fs.writeFileSync(
+        "./randomized_color_ palette.json",
+        JSON.stringify(randomColors)
+      );
+
+      // Logging the random colors
+      console.log(
+        JSON.parse(fs.readFileSync("./randomized_color_ palette.json", "utf-8"))
+      );
+    } else {
+      console.log("RandomColors is empty, aborting write process");
+    }
+  } catch (error) {
+    console.log("Unable to parse JSON, check file is empty or invalid format");
+  }
+} else {
+  console.log("File Not Found, aborting the process");
+}
 /**
  * Function to get n random numbers
  * @param length upper limit for the random number generation
@@ -64,20 +88,4 @@ function get_random_colors(list, count) {
     result.push(list[index]);
   }
   return result;
-}
-let randomColors = get_random_colors(colorPalette, 5);
-
-if (randomColors.length !== 0) {
-  // Writing the random colors into the file
-  fs.writeFileSync(
-    "./randomized_color_ palette.json",
-    JSON.stringify(randomColors)
-  );
-
-  // Logging the random colors
-  console.log(
-    JSON.parse(fs.readFileSync("./randomized_color_ palette.json", "utf-8"))
-  );
-} else {
-  console.log("RandomColors is empty, aborting write process");
 }
