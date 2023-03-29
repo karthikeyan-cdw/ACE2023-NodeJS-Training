@@ -1,3 +1,8 @@
+/**
+ * @author Karthikeyan C
+ * @version 1.0
+ */
+
 // Importing the required file
 const fs = require("fs");
 const random_number = require("random-number");
