@@ -1,12 +1,10 @@
 // importing the required modules
-const fs = require("fs");
-
-// adding the database
-const database = "./database/cdw_ace23_buddies.json";
+const readJSON = require("../utilities/readJSON");
+const writeJSON = require("../utilities/writeJSON");
 
 // function to add a buddy to the database
 const addBuddy = (data) => {
-  let buddies = JSON.parse(fs.readFileSync(database, "utf-8"));
+  let buddies = readJSON();
   let alreadyExists = false;
   buddies.forEach((buddy) => {
     if (buddy.employeeId === data.employeeId) {
@@ -17,27 +15,27 @@ const addBuddy = (data) => {
     return false;
   } else {
     buddies.push(data);
-    fs.writeFileSync(database, JSON.stringify(buddies));
+    writeJSON(buddies);
     return true;
   }
 };
 
 // function to get all buddies details from the database
 const getAllBuddies = () => {
-  let buddies = JSON.parse(fs.readFileSync(database, "utf-8"));
+  let buddies = readJSON();
   return buddies;
 };
 
 // function to get a buddy detail from the database
 const getBuddy = (empId) => {
-  let buddies = JSON.parse(fs.readFileSync(database, "utf-8"));
+  let buddies = readJSON();
   let buddy = buddies.filter((buddy) => buddy.employeeId == empId);
   return buddy;
 };
 
 // function to update a buddy detail in the database
 const updateBuddy = (empId, newData) => {
-  let buddies = JSON.parse(fs.readFileSync(database, "utf-8"));
+  let buddies = readJSON();
   let buddyIndex = buddies.findIndex((buddy) => buddy.employeeId === empId);
 
   if (buddyIndex != -1) {
@@ -52,7 +50,7 @@ const updateBuddy = (empId, newData) => {
     if (isModifiable === false) {
       return 403;
     } else {
-      fs.writeFileSync(database, JSON.stringify(buddies));
+      writeJSON(buddies);
       return 200;
     }
   } else {
@@ -62,11 +60,11 @@ const updateBuddy = (empId, newData) => {
 
 // function to delete a buddy from the database
 const deleteBuddy = (empId) => {
-  let buddies = JSON.parse(fs.readFileSync(database, "utf-8"));
+  let buddies = readJSON();
   let intialBuddiesLength = buddies.length;
   buddies = buddies.filter((buddy) => buddy.employeeId !== empId);
   if (intialBuddiesLength !== buddies.length) {
-    fs.writeFileSync(database, JSON.stringify(buddies));
+    writeJSON(buddies);
     return true;
   } else {
     return false;
