@@ -1,6 +1,7 @@
 // importing the required modules
 const express = require("express");
 const cors = require("cors");
+
 // importing the routes
 const buddiesRoute = require("./src/routes/buddies.routes");
 

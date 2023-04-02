@@ -1,14 +1,17 @@
 // importing the required modules
 const app = require("./index");
 const writeJSON = require("./src/utilities/writeJSON");
-
-// constants
-const PORT = 4003;
-const HOST = "http://localhost";
+require("dotenv").config();
 
 // starting up the server
-app.listen(PORT, () => {
-  console.log("Server has started listening in : " + HOST + ":/" + PORT + "/");
+app.listen(process.env.PORT, () => {
+  console.log(
+    "Server has started listening in : " +
+      process.env.HOST +
+      ":/" +
+      process.env.PORT +
+      "/"
+  );
   const buddies = [];
   writeJSON(buddies);
 });
