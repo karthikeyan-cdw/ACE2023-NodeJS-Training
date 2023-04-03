@@ -20,5 +20,7 @@ app.use(express.json());
 app.use(cors(corsOptions));
 
 app.use("/buddies", buddiesRoute);
-
+app.use("/", (request, response) => {
+  response.send({ message: "This is the default route" });
+});
 module.exports = app;
