@@ -1,6 +1,6 @@
 // importing the required modules
 const app = require("./index");
-const writeJSON = require("./src/utilities/writeJSON");
+const { writeJSON } = require("./src/utilities/JSONIO");
 
 // constants
 const PORT = 4003;
