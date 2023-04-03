@@ -11,11 +11,7 @@ const addBuddy = (request, response) => {
 // function to get all buddies from database
 const getAllBuddies = (request, response) => {
   let buddies = buddiesServices.getAllBuddies();
-  if (buddies.length === 0) {
-    response.status(404).send({ error: "No Employees Found" });
-  } else {
-    response.status(200).send(buddies);
-  }
+  response.status(200).send(buddies);
 };
 
 // function to get a buddy from database using id

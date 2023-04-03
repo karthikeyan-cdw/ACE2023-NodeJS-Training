@@ -5,19 +5,12 @@ const writeJSON = require("../utilities/writeJSON");
 // function to add a buddy to the database
 const addBuddy = (data) => {
   let buddies = readJSON();
-  let alreadyExists = false;
-  buddies.forEach((buddy) => {
-    if (buddy.employeeId === data.employeeId) {
-      alreadyExists = true;
-    }
-  });
-  if (alreadyExists) {
-    return false;
-  } else {
+  if (!buddies.some((buddy) => buddy.employeeId === data.employeeId)) {
     buddies.push(data);
     writeJSON(buddies);
     return true;
   }
+  return false;
 };
 
 // function to get all buddies details from the database
@@ -29,7 +22,7 @@ const getAllBuddies = () => {
 // function to get a buddy detail from the database
 const getBuddy = (empId) => {
   let buddies = readJSON();
-  let buddy = buddies.filter((buddy) => buddy.employeeId == empId);
+  let buddy = buddies.find((buddy) => buddy.employeeId == empId) || [];
   return buddy;
 };
 
@@ -40,22 +33,22 @@ const updateBuddy = (empId, newData) => {
 
   if (buddyIndex != -1) {
     let isModifiable = true;
+    const shouldNotModify = ["employeeId", "realName", "dob"];
     for (let key in Object(newData)) {
-      if (key === "employeeId" || key === "realName" || key === "dob") {
+      if (shouldNotModify.includes(key)) {
         isModifiable = false;
+        break;
       } else {
         buddies[buddyIndex][key] = newData[key];
       }
     }
     if (isModifiable === false) {
       return 403;
-    } else {
-      writeJSON(buddies);
-      return 200;
     }
-  } else {
-    return 404;
+    writeJSON(buddies);
+    return 200;
   }
+  return 404;
 };
 
 // function to delete a buddy from the database
@@ -66,9 +59,8 @@ const deleteBuddy = (empId) => {
   if (intialBuddiesLength !== buddies.length) {
     writeJSON(buddies);
     return true;
-  } else {
-    return false;
   }
+  return false;
 };
 
 module.exports = {
