@@ -1,6 +1,5 @@
 // importing the required modules
-const readJSON = require("../utilities/readJSON");
-const writeJSON = require("../utilities/writeJSON");
+const { readJSON, writeJSON } = require("../utilities/JSONIO");
 
 // function to add a buddy to the database
 const addBuddy = (data) => {

@@ -1,8 +1,7 @@
 // importing the required modules
 const app = require("./index");
-const writeJSON = require("./src/utilities/writeJSON");
+const { writeJSON } = require("./src/utilities/JSONIO");
 require("dotenv").config();
-
 // starting up the server
 app.listen(process.env.PORT, () => {
   console.log(
