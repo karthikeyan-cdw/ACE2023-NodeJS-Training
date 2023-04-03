@@ -10,5 +10,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use("/buddies", buddiesRoute);
-
+app.use("/", (request, response) => {
+  response.send({ message: "This is the default route" });
+});
 module.exports = app;

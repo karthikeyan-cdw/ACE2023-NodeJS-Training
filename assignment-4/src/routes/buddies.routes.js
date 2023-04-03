@@ -15,5 +15,8 @@ router.get("/", getAllBuddies);
 router.get("/:buddyId", getBuddy);
 router.put("/:buddyId", updateBuddy);
 router.delete("/:buddyId", deleteBuddy);
+router.use("/", (request, response) => {
+  response.send({ error: "This API wont serves this request" });
+});
 
 module.exports = router;
