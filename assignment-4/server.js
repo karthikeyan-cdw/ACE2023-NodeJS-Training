@@ -8,7 +8,7 @@ const HOST = "http://localhost";
 
 // starting up the server
 app.listen(PORT, () => {
-  console.log("Server has started listening in : " + HOST + ":/" + PORT + "/");
+  console.log(`Server has started listening in : ${HOST}/${PORT}/`);
   const buddies = [];
   writeJSON(buddies);
 });
