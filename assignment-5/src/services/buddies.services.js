@@ -4,12 +4,15 @@ const { readJSON, writeJSON } = require("../utilities/JSONIO");
 // function to add a buddy to the database
 const addBuddy = (data) => {
   let buddies = readJSON();
-  if (!buddies.some((buddy) => buddy.employeeId === data.employeeId)) {
-    buddies.push(data);
-    writeJSON(buddies);
-    return true;
+  if (buddies.status === 500) {
+    return buddies;
   }
-  return false;
+  if (!buddies.data.some((buddy) => buddy.employeeId === data.employeeId)) {
+    buddies.data.push(data);
+    let result = writeJSON(buddies.data);
+    return result;
+  }
+  return { status: 403, data: "Employee Id Already Exists" };
 };
 
 // function to get all buddies details from the database
@@ -21,14 +24,23 @@ const getAllBuddies = () => {
 // function to get a buddy detail from the database
 const getBuddy = (empId) => {
   let buddies = readJSON();
-  let buddy = buddies.find((buddy) => buddy.employeeId == empId) || [];
-  return buddy;
+  if (buddies.status === 500) {
+    return buddies;
+  }
+  let buddy = buddies.data.find((buddy) => buddy.employeeId == empId) || [];
+  if (buddy.length === 0) return { status: 404, data: buddy };
+  return { status: 200, data: buddy };
 };
 
 // function to update a buddy detail in the database
 const updateBuddy = (empId, newData) => {
   let buddies = readJSON();
-  let buddyIndex = buddies.findIndex((buddy) => buddy.employeeId === empId);
+  if (buddies.status === 500) {
+    return buddies;
+  }
+  let buddyIndex = buddies.data.findIndex(
+    (buddy) => buddy.employeeId === empId
+  );
 
   if (buddyIndex != -1) {
     let isModifiable = true;
@@ -38,28 +50,30 @@ const updateBuddy = (empId, newData) => {
         isModifiable = false;
         break;
       } else {
-        buddies[buddyIndex][key] = newData[key];
+        buddies.data[buddyIndex][key] = newData[key];
       }
     }
     if (isModifiable === false) {
-      return 403;
+      return { status: 403, data: "Can't Update Some Data" };
     }
-    writeJSON(buddies);
-    return 200;
+    let result = writeJSON(buddies.data);
+    return result;
   }
-  return 404;
+  return { status: 404, data: "Employee Not Found" };
 };
 
 // function to delete a buddy from the database
 const deleteBuddy = (empId) => {
   let buddies = readJSON();
-  let intialBuddiesLength = buddies.length;
-  buddies = buddies.filter((buddy) => buddy.employeeId !== empId);
-  if (intialBuddiesLength !== buddies.length) {
-    writeJSON(buddies);
-    return true;
+  if (buddies.status === 500) {
+    return buddies;
   }
-  return false;
+  let intialBuddiesLength = buddies.data.length;
+  buddies = buddies.data.filter((buddy) => buddy.employeeId !== empId);
+  if (intialBuddiesLength !== buddies.length) {
+    let result = writeJSON(buddies);
+    return result;
+  }
 };
 
 module.exports = {

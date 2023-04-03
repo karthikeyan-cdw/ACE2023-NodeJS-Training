@@ -3,39 +3,46 @@ const buddiesServices = require("../services/buddies.services");
 
 // function to add a buddy to database
 const addBuddy = (request, response) => {
-  if (buddiesServices.addBuddy(request.body))
-    response.status(201).send({ message: "Employee Added" });
-  else response.status(403).send({ error: "Employee Id Already Exists" });
+  let result = buddiesServices.addBuddy(request.body);
+  switch (result.status) {
+    case 200:
+      response.status(201).send({ message: "Employee Added" });
+      break;
+    default:
+      response.status(result.status).send({ error: result.data });
+  }
 };
 
 // function to get all buddies from database
 const getAllBuddies = (request, response) => {
-  let buddies = buddiesServices.getAllBuddies();
-  response.status(200).send(buddies);
+  let result = buddiesServices.getAllBuddies();
+  response.status(result.status).send(result.data);
 };
 
 // function to get a buddy from database using id
 const getBuddy = (request, response) => {
-  let buddy = buddiesServices.getBuddy(request.params.buddyId);
-  if (buddy.length === 0) {
-    response.status(404).send({ error: "Employee Not Found" });
+  let result = buddiesServices.getBuddy(request.params.buddyId);
+  if (result.data.length === 0) {
+    response.status(result.status).send({ error: "Employee Not Found" });
   } else {
-    response.status(200).send(buddy);
+    response.status(result.status).send(result.data);
   }
 };
 
 // function to update the buddy details in database using id
 const updateBuddy = (request, response) => {
-  let statusCode = buddiesServices.updateBuddy(
+  let result = buddiesServices.updateBuddy(
     request.params.buddyId,
     request.body
   );
-  if (statusCode === 200) {
-    response.status(200).send({ message: "Employee Information Updated" });
-  } else if (statusCode === 403) {
-    response.status(403).send({ error: "Can't Update Some Data" });
-  } else {
-    response.status(404).send({ error: "Employee Not Found" });
+  switch (result.status) {
+    case 200:
+      response
+        .status(result.status)
+        .send({ message: "Employee Information Updated" });
+      break;
+    default:
+      response.status(result.status).send({ error: result.data });
   }
 };
 
