@@ -10,6 +10,7 @@ const addBuddy = (data) => {
   if (!buddies.data.some((buddy) => buddy.employeeId === data.employeeId)) {
     buddies.data.push(data);
     let result = writeJSON(buddies.data);
+    if (result.status === 200) return { status: 201, data: "Employee Added" };
     return result;
   }
   return { status: 403, data: "Employee Id Already Exists" };
@@ -28,7 +29,7 @@ const getBuddy = (empId) => {
     return buddies;
   }
   let buddy = buddies.data.find((buddy) => buddy.employeeId == empId) || [];
-  if (buddy.length === 0) return { status: 404, data: buddy };
+  if (buddy.length === 0) return { status: 404, data: "Employee Not Found" };
   return { status: 200, data: buddy };
 };
 
@@ -57,6 +58,7 @@ const updateBuddy = (empId, newData) => {
       return { status: 403, data: "Can't Update Some Data" };
     }
     let result = writeJSON(buddies.data);
+    if (result.status === 200) return { status: 200, data: "Employee Information Updated" };
     return result;
   }
   return { status: 404, data: "Employee Not Found" };
@@ -72,8 +74,10 @@ const deleteBuddy = (empId) => {
   buddies = buddies.data.filter((buddy) => buddy.employeeId !== empId);
   if (intialBuddiesLength !== buddies.length) {
     let result = writeJSON(buddies);
+    if (result.status === 200) return { status: 200, data: "Employee Deleted" };
     return result;
   }
+  return { status: 404, data: "Employee Not Found" };
 };
 
 module.exports = {
