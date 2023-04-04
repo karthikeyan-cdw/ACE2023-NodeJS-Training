@@ -8,13 +8,13 @@ const {
 const createLog = (result) => {
   switch (true) {
     case result.status >= 200 && result.status <= 299:
-      infoLogger.info(result.data);
+      infoLogger.info(JSON.stringify(result));
       break;
     case result.status >= 400 && result.status <= 499:
-      warningLogger.warn(result.data);
+      warningLogger.warn(JSON.stringify(result));
       break;
     case result.status >= 500 && result.status <= 599:
-      errorLogger.error(result.data);
+      errorLogger.error(JSON.stringify(result));
       break;
     default:
   }

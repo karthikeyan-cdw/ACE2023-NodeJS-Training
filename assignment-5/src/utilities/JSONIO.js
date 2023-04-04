@@ -7,11 +7,19 @@ const writeJSON = (input_data) => {
     try {
       fs.writeFileSync(process.env.DATABASE_URL, data);
       return { status: 200, data: "Data Successfully written" };
-    } catch {
-      return { status: 500, data: "Unable to write to Database" };
+    } catch (error) {
+      return {
+        status: 500,
+        data: "Unable to write to Database",
+        error: `${error.status || 500} - ${error} - ${error.stack}`,
+      };
     }
-  } catch {
-    return { status: 500, data: "Invalid Data Format" };
+  } catch (error) {
+    return {
+      status: 500,
+      data: "Invalid Data Format",
+      error: `${error.status || 500} - ${error} - ${error.stack}`,
+    };
   }
 };
 const readJSON = () => {
@@ -19,11 +27,19 @@ const readJSON = () => {
     const data = fs.readFileSync(process.env.DATABASE_URL, "utf-8");
     try {
       return { status: 200, data: JSON.parse(data) };
-    } catch {
-      return { status: 500, data: "Database corrupted" };
+    } catch (error) {
+      return {
+        status: 500,
+        data: "Database corrupted",
+        error: `${error.status || 500} - ${error} - ${error.stack}`,
+      };
     }
-  } catch {
-    return { status: 500, data: "Database Not Found" };
+  } catch (error) {
+    return {
+      status: 500,
+      data: "Database Not Found",
+      error: `${error.status || 500} - ${error} - ${error.stack}`,
+    };
   }
 };
 
