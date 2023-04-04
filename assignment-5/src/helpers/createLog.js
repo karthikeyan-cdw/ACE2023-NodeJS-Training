@@ -5,6 +5,7 @@ const {
   infoLogger,
 } = require("../utilities/logger");
 
+// function to create logs
 const createLog = (result) => {
   switch (true) {
     case result.status >= 200 && result.status <= 299:

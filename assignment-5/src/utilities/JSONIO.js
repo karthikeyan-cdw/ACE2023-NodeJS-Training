@@ -1,6 +1,7 @@
 // importing the required modules
 const fs = require("fs");
 
+// function to write to file in json format
 const writeJSON = (input_data) => {
   try {
     const data = JSON.stringify(input_data);
@@ -22,6 +23,8 @@ const writeJSON = (input_data) => {
     };
   }
 };
+
+// function to read from file in json format
 const readJSON = () => {
   try {
     const data = fs.readFileSync(process.env.DATABASE_URL, "utf-8");
