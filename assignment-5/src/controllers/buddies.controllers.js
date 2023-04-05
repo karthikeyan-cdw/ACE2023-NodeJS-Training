@@ -1,5 +1,6 @@
 // importing the required modules
 const createLog = require("../helpers/createLog");
+const { debugLogger } = require("../utilities/logger");
 
 // setting up the controllers for the buddies
 const buddiesServices = require("../services/buddies.services");
@@ -16,6 +17,7 @@ const buddiesServices = require("../services/buddies.services");
  * @author @karthikeyan-cdw
  */
 const addBuddy = (request, response) => {
+  debugLogger.info(`BEGIN: Service > addBuddy`);
   let result = buddiesServices.addBuddy(request.body);
   response.status(result.status).send({ message: result.data });
   createLog({
@@ -25,6 +27,7 @@ const addBuddy = (request, response) => {
     ip: request.ip,
     method: request.method,
   });
+  debugLogger.info(`END: Service > addBuddy`);
 };
 
 /**
@@ -40,6 +43,7 @@ const addBuddy = (request, response) => {
  * @author @karthikeyan-cdw
  */
 const getAllBuddies = (request, response) => {
+  debugLogger.info(`BEGIN: Service > getAllBuddies`);
   let result = buddiesServices.getAllBuddies();
   if (result.status === 200) response.status(result.status).send(result.data);
   else response.status(result.status).send({ message: result.data });
@@ -50,6 +54,7 @@ const getAllBuddies = (request, response) => {
     ip: request.ip,
     method: request.method,
   });
+  debugLogger.info(`END: Service > getAllBuddies`);
 };
 
 /**
@@ -64,6 +69,7 @@ const getAllBuddies = (request, response) => {
  * @author @karthikeyan-cdw
  */
 const getBuddy = (request, response) => {
+  debugLogger.info(`BEGIN: Service > getBuddy`);
   let result = buddiesServices.getBuddy(request.params.buddyId);
   if (result.status === 200) response.status(result.status).send(result.data);
   else response.status(result.status).send({ message: result.data });
@@ -74,6 +80,7 @@ const getBuddy = (request, response) => {
     ip: request.ip,
     method: request.method,
   });
+  debugLogger.info(`END: Service > getBuddy`);
 };
 
 /**
@@ -88,6 +95,7 @@ const getBuddy = (request, response) => {
  * @author @karthikeyan-cdw
  */
 const updateBuddy = (request, response) => {
+  debugLogger.info(`BEGIN: Service > updateBuddy`);
   let result = buddiesServices.updateBuddy(
     request.params.buddyId,
     request.body
@@ -100,6 +108,7 @@ const updateBuddy = (request, response) => {
     ip: request.ip,
     method: request.method,
   });
+  debugLogger.info(`END: Service > updateBuddy`);
 };
 
 /**
@@ -114,9 +123,11 @@ const updateBuddy = (request, response) => {
  * @author @karthikeyan-cdw
  */
 const deleteBuddy = (request, response) => {
+  debugLogger.info(`BEGIN: Service > deleteBuddy`);
   let result = buddiesServices.deleteBuddy(request.params.buddyId);
   response.status(result.status).send({ message: result.data });
   createLog(result);
+  debugLogger.info(`END: Service > deleteBuddy`);
 };
 
 module.exports = {
