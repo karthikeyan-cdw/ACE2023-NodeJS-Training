@@ -67,4 +67,20 @@ const infoLogger = createLogger({
     }),
   ],
 });
-module.exports = { errorLogger, warningLogger, infoLogger };
+
+// logger for logging debugs
+const debugLogger = createLogger({
+  level: process.env.LOGGER_LEVEL_DEBUG,
+  transports: new transports.File({
+    filename: "./logs/debug.log",
+    format: format.combine(
+      format.timestamp({ format: "MMM-DD-YYYY HH:mm:ss" }),
+      format.align(),
+      format.printf(
+        (info) => `${info.level}: ${[info.timestamp]}: ${info.message}`
+      )
+    ),
+  }),
+});
+
+module.exports = { errorLogger, warningLogger, infoLogger, debugLogger };
