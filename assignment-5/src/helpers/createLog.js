@@ -5,7 +5,15 @@ const {
   infoLogger,
 } = require("../utilities/logger");
 
-// function to create logs
+
+/**
+ * @summary The function creates logs based on the HTTP status code of a result object.
+ * @param result - The `result` parameter is an object that contains information about the result of an
+ * HTTP request, including the status code, headers, and response body. The `createLog` function takes
+ * this `result` object as input and logs it to different loggers based on the status code of the
+ * response.
+* @author @karthikeyan-cdw
+ */
 const createLog = (result) => {
   switch (true) {
     case result.status >= 200 && result.status <= 299:
