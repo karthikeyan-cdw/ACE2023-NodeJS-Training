@@ -1,7 +1,7 @@
 // importing required modules
 const bcrypt = require("bcrypt");
 
-const saltRounds = 10;
+const saltRounds = process.env.BCRYPT_SALT || 10;
 
 /**
  * @summary The function createHashs a given text using bcrypt hashing algorithm.
