@@ -6,7 +6,7 @@ const addTask = (data) => {
   if (tasks.status === 500) {
     return tasks;
   }
-  if (!tasks.data.some((task) => task.taskId === data.taskId)) {
+  if (!tasks.data.some((task) => task.title === data.title)) {
     tasks.data.push(data);
     let result = writeJSON(process.env.TASKS_DATABASE_URL, tasks.data);
     if (result.status === 200) return { status: 201, data: "Task Added" };
