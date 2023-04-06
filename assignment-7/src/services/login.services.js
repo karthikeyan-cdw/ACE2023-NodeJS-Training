@@ -1,6 +1,7 @@
 // importing the required modules
 const jwt = require("jsonwebtoken");
 const { readJSON } = require("../utilities/JSONIO");
+const { verifyHash } = require("../utilities/crypting");
 
 const loginUser = (email, password) => {
   const users = readJSON(process.env.USERS_DATABASE_URL);
@@ -9,9 +10,8 @@ const loginUser = (email, password) => {
   }
   let user = users.data.find((user) => user.email == email) || [];
   if (user.length === 0) return { status: 404, data: "User Not Found" };
-
-  if (user.password !== password) {
-    console.log("U:", user, "P:", password);
+  console.log(user.password, password);
+  if (!verifyHash(password, user.password)) {
     return { status: 403, data: "Invalid Password" };
   }
   const jwtToken = jwt.sign({ email }, process.env.JWT_SECRET_KEY, {

@@ -1,6 +1,7 @@
 // importing the required modules
 const jwt = require("jsonwebtoken");
 const { readJSON, writeJSON } = require("../utilities/JSONIO");
+const {createHash} = require("../utilities/crypting");
 
 const signupUser = (email, password) => {
   const users = readJSON(process.env.USERS_DATABASE_URL);
@@ -8,7 +9,7 @@ const signupUser = (email, password) => {
     return users;
   }
   if (!users.data.some((user) => user.email === email)) {
-    users.data.push({email, password});
+    users.data.push({email, password:createHash(password)});
     let result = writeJSON(process.env.USERS_DATABASE_URL, users.data);
     if (result.status === 200) return { status: 201, data: "User Created" };
     return result;
