@@ -2,7 +2,7 @@
 const express = require("express");
 const { loginUser } = require("../controllers/login.controllers.js");
 
-// setting up the routes for the logins
+// setting up the routes for the login
 const router = express.Router();
 router.post("/", loginUser);
 router.use("/", (request, response) => {

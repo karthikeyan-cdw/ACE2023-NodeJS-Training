@@ -52,7 +52,7 @@ function auth(request, response, next) {
   }
   try {
     const user = jwt.verify(jwtToken, process.env.JWT_SECRET_KEY);
-    request.user = user.email;
+    request.user = user.username;
     if (request.user !== username) {
       const result = { status: 400, data: "Username Mismatch" };
       createLog({
@@ -75,7 +75,7 @@ function auth(request, response, next) {
     debugLogger.info("END: Authentication");
     next();
   } catch (error) {
-    let result={};
+    let result = {};
     if (error instanceof jwt.TokenExpiredError) {
       result = {
         status: 401,
