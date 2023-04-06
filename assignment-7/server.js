@@ -11,7 +11,7 @@ app.listen(process.env.PORT, () => {
     status: 200,
     message: `Server has started listening in : ${process.env.HOST}:${process.env.PORT}/`,
   });
-  const tasks = [];
+  const tasks = {};
   const users = [];
   if (!fs.existsSync(process.env.TASKS_DATABASE_URL))
     writeJSON(process.env.TASKS_DATABASE_URL, tasks);

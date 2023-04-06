@@ -7,16 +7,19 @@ const {
   updateTask,
   deleteTask,
 } = require("../controllers/tasks.controllers.js");
-const { validateTask } = require("../middlewares/validate.js");
+const {
+  validateTaskCreateMethod,
+  validateTaskUpdateMethod,
+} = require("../middlewares/validate.js");
 const auth = require("../middlewares/auth.js");
 
 // setting up the routes for the tasks
 const router = express.Router();
-router.post("/", validateTask, auth, addTask);
-router.get("/", validateTask, auth, getAllTasks);
-router.get("/:taskId", validateTask, auth, getTask);
-router.put("/:taskId", validateTask, auth, updateTask);
-router.delete("/:taskId", validateTask, auth, deleteTask);
+router.post("/", validateTaskCreateMethod, auth, addTask);
+router.get("/", auth, getAllTasks);
+router.get("/:taskId", auth, getTask);
+router.put("/:taskId", validateTaskUpdateMethod, auth, updateTask);
+router.delete("/:taskId", auth, deleteTask);
 router.use("/", (request, response) => {
   const result = { status: 404, error: "This API wont serves this request" };
   response.status(result.status).send({ error: result.error });

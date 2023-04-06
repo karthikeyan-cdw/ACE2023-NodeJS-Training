@@ -25,7 +25,7 @@ const signupUser = (username, password) => {
     let result = writeJSON(process.env.USERS_DATABASE_URL, users.data);
     if (result.status === 200) {
       const jwtToken = jwt.sign({ username }, process.env.JWT_SECRET_KEY, {
-        expiresIn: "30m",
+        expiresIn: "24h",
       });
       return { status: 200, token: jwtToken };
     }

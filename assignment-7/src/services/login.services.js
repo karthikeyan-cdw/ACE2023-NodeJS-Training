@@ -22,12 +22,11 @@ const loginUser = (username, password) => {
   }
   let user = users.data.find((user) => user.username == username) || [];
   if (user.length === 0) return { status: 404, data: "User Not Found" };
-  console.log(user.password, password);
   if (!verifyHash(password, user.password)) {
     return { status: 403, data: "Invalid Password" };
   }
   const jwtToken = jwt.sign({ username }, process.env.JWT_SECRET_KEY, {
-    expiresIn: "30m",
+    expiresIn: "24h",
   });
   return { status: 200, token: jwtToken };
 };

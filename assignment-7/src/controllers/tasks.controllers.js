@@ -6,7 +6,7 @@ const tasksServices = require("../services/tasks.services");
 
 const addTask = (request, response) => {
   debugLogger.info(`BEGIN: Service > addTask`);
-  let result = tasksServices.addTask(request.body);
+  let result = tasksServices.addTask(request.user, request.body);
   response.status(result.status).send({ message: result.data });
   createLog({
     ...result,
@@ -20,7 +20,7 @@ const addTask = (request, response) => {
 
 const getAllTasks = (request, response) => {
   debugLogger.info(`BEGIN: Service > getAllTasks`);
-  let result = tasksServices.getAllTasks();
+  let result = tasksServices.getAllTasks(request.user, request.query);
   if (result.status === 200) response.status(result.status).send(result.data);
   else response.status(result.status).send({ message: result.data });
   createLog({
@@ -35,7 +35,7 @@ const getAllTasks = (request, response) => {
 
 const getTask = (request, response) => {
   debugLogger.info(`BEGIN: Service > getTask`);
-  let result = tasksServices.getTask(request.params.taskId);
+  let result = tasksServices.getTask(request.user, request.params.taskId);
   if (result.status === 200) response.status(result.status).send(result.data);
   else response.status(result.status).send({ message: result.data });
   createLog({
@@ -50,7 +50,11 @@ const getTask = (request, response) => {
 
 const updateTask = (request, response) => {
   debugLogger.info(`BEGIN: Service > updateTask`);
-  let result = tasksServices.updateTask(request.params.taskId, request.body);
+  let result = tasksServices.updateTask(
+    request.user,
+    request.params.taskId,
+    request.body
+  );
   response.status(result.status).send({ message: result.data });
   createLog({
     ...result,
@@ -64,7 +68,7 @@ const updateTask = (request, response) => {
 
 const deleteTask = (request, response) => {
   debugLogger.info(`BEGIN: Service > deleteTask`);
-  let result = tasksServices.deleteTask(request.params.taskId);
+  let result = tasksServices.deleteTask(request.user, request.params.taskId);
   response.status(result.status).send({ message: result.data });
   createLog(result);
   debugLogger.info(`END: Service > deleteTask`);
