@@ -1,13 +1,14 @@
+// importing required modules
 const { readJSON, writeJSON } = require("../utilities/JSONIO");
 
 const addTask = (data) => {
-  let tasks = readJSON();
+  let tasks = readJSON(process.env.TASKS_DATABASE_URL);
   if (tasks.status === 500) {
     return tasks;
   }
   if (!tasks.data.some((task) => task.taskId === data.taskId)) {
     tasks.data.push(data);
-    let result = writeJSON(tasks.data);
+    let result = writeJSON(process.env.TASKS_DATABASE_URL, tasks.data);
     if (result.status === 200) return { status: 201, data: "Task Added" };
     return result;
   }
@@ -15,12 +16,12 @@ const addTask = (data) => {
 };
 
 const getAllTasks = () => {
-  let tasks = readJSON();
+  let tasks = readJSON(process.env.TASKS_DATABASE_URL);
   return tasks;
 };
 
 const getTask = (taskId) => {
-  let tasks = readJSON();
+  let tasks = readJSON(process.env.TASKS_DATABASE_URL);
   if (tasks.status === 500) {
     return tasks;
   }
@@ -30,7 +31,7 @@ const getTask = (taskId) => {
 };
 
 const updateTask = (taskId, newData) => {
-  let tasks = readJSON();
+  let tasks = readJSON(process.env.TASKS_DATABASE_URL);
   if (tasks.status === 500) {
     return tasks;
   }
@@ -50,7 +51,7 @@ const updateTask = (taskId, newData) => {
     if (isModifiable === false) {
       return { status: 403, data: "Can't Update Some Data" };
     }
-    let result = writeJSON(tasks.data);
+    let result = writeJSON(process.env.TASKS_DATABASE_URL, tasks.data);
     if (result.status === 200)
       return { status: 200, data: "Task Information Updated" };
     return result;
@@ -59,14 +60,14 @@ const updateTask = (taskId, newData) => {
 };
 
 const deleteTask = (taskId) => {
-  let tasks = readJSON();
+  let tasks = readJSON(process.env.TASKS_DATABASE_URL);
   if (tasks.status === 500) {
     return tasks;
   }
   let intialTasksLength = tasks.data.length;
   tasks = tasks.data.filter((task) => task.taskId !== taskId);
   if (intialTasksLength !== tasks.length) {
-    let result = writeJSON(tasks);
+    let result = writeJSON(process.env.TASKS_DATABASE_URL, tasks);
     if (result.status === 200) return { status: 200, data: "Task Deleted" };
     return result;
   }
