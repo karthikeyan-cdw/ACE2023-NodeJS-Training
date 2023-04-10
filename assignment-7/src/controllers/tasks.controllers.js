@@ -15,6 +15,7 @@ const constants = require("../../constants");
  */
 const addTask = (request, response) => {
   logger.info(`BEGIN: Service > addTask`);
+  console.log("************", request.header("Authorization"), request.user, "************");
   let result = tasksServices.addTask(request.user, request.body);
   response.status(result.status).send({ message: result.data });
   createLog({
