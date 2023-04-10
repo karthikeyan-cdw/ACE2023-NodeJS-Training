@@ -102,39 +102,13 @@ const getTask = (username, taskId) => {
  */
 const updateTask = (username, taskId, newData) => {
   let tasks = readJSON(process.env.TASKS_DATABASE_URL);
-  if (tasks.status === constants.CODES.INTERNAL_SERVER_ERROR) {
-    return tasks;
-  }
+  if (tasks.status === constants.CODES.INTERNAL_SERVER_ERROR) return tasks;
   if (tasks.data[username] !== undefined) {
     let taskIndex = tasks.data[username].findIndex(
       (task) => task.taskId === taskId
     );
-
-    if (taskIndex != -1) {
-      let isModifiable = true;
-      const shouldNotModify = ["taskId"];
-      for (let key in Object(newData)) {
-        if (shouldNotModify.includes(key)) {
-          isModifiable = false;
-          break;
-        } else {
-          tasks.data[username][taskIndex][key] = newData[key];
-        }
-      }
-      if (isModifiable === false) {
-        return {
-          status: constants.CODES.UNAUTHORIZED,
-          data: constants.MESSAGES.TASK_CANT_BE_UPDATED,
-        };
-      }
-      let result = writeJSON(process.env.TASKS_DATABASE_URL, tasks.data);
-      if (result.status === constants.CODES.OK)
-        return {
-          status: constants.CODES.OK,
-          data: constants.MESSAGES.TASK_UPDATED,
-        };
-      return result;
-    }
+    if (taskIndex != -1)
+      return updateTaskInData(newData, tasks, taskIndex, username);
   }
   return {
     status: constants.CODES.NOT_FOUND,
@@ -143,16 +117,54 @@ const updateTask = (username, taskId, newData) => {
 };
 
 /**
- * The function deletes a task for a given username and taskId from a tasks database and returns a
- * success message or an error message if the task is not found.
- * @param username - The username parameter is a string that represents the username of the user whose
- * task is to be deleted.
- * @param taskId - taskId is a unique identifier for a task that needs to be deleted from the tasks
- * database.
+ * The function updates a task in a data object if it is modifiable, otherwise it returns an
+ * unauthorized error message.
+ * @param newData - The new data that needs to be updated in the tasks object.
+ * @param tasks - The `tasks` parameter is an object that contains data about tasks. It has a `data`
+ * property that is also an object, where each key is a username and the value is an array of tasks
+ * associated with that user. The `updateTaskInData` function modifies this data object by updating
+ * @param taskIndex - The index of the task in the array of tasks for a specific user.
+ * @param username - The `username` parameter is a string that represents the name of the user whose
+ * task is being updated in the `tasks` data.
  * @returns an object with a `status` property and a `data` property. The `status` property indicates
- * the status of the operation and the `data` property contains a message related to the status. The
- * possible values for `status` are `constants.CODES.OK`, `constants.CODES.INTERNAL_SERVER_ERROR`, and
- * `constants.CODES.NOT_FOUND`.
+ * the status of the operation, and the `data` property contains a message related to the status. If
+ * the task is successfully updated, the `status` property will be `constants.CODES.OK` and the `data`
+ * property will be `constants.MESSAGES.TASK_UPDATED`.
+ */
+const updateTaskInData = (newData, tasks, taskIndex, username) => {
+  let isModifiable = true;
+  const shouldNotModify = ["taskId"];
+  for (let key in Object(newData)) {
+    if (shouldNotModify.includes(key)) {
+      isModifiable = false;
+      break;
+    }
+    tasks.data[username][taskIndex][key] = newData[key];
+  }
+  if (isModifiable === false) {
+    return {
+      status: constants.CODES.UNAUTHORIZED,
+      data: constants.MESSAGES.TASK_CANT_BE_UPDATED,
+    };
+  }
+  let result = writeJSON(process.env.TASKS_DATABASE_URL, tasks.data);
+  if (result.status === constants.CODES.OK)
+    return {
+      status: constants.CODES.OK,
+      data: constants.MESSAGES.TASK_UPDATED,
+    };
+  return result;
+};
+
+/**
+ * The function deletes a task from a database based on the provided username and task ID.
+ * @param username - The username of the user whose task is to be deleted.
+ * @param taskId - The `taskId` parameter is the unique identifier of the task that needs to be deleted
+ * from the database.
+ * @returns The function `deleteTask` returns an object with a `status` property and a `data` property.
+ * If the `readJSON` function returns an error, the `status` property will be set to
+ * `constants.CODES.INTERNAL_SERVER_ERROR` and the entire `tasks` object will be returned. If the
+ * `username` provided is found in the `tasks` object.
  */
 const deleteTask = (username, taskId) => {
   let tasks = readJSON(process.env.TASKS_DATABASE_URL);
@@ -160,24 +172,43 @@ const deleteTask = (username, taskId) => {
     return tasks;
   }
   if (tasks.data[username] !== undefined) {
-    let intialTasksLength = tasks.data[username].length;
-    tasksOfUser = tasks.data[username].filter((task) => {
-      return task.taskId !== taskId;
-    });
-    if (intialTasksLength !== tasksOfUser.length) {
-      tasks.data[username] = tasksOfUser;
-      let result = writeJSON(process.env.TASKS_DATABASE_URL, tasks.data);
-      if (result.status === constants.CODES.OK)
-        return {
-          status: constants.CODES.OK,
-          data: constants.MESSAGES.TASK_DELETED,
-        };
-      return result;
-    }
-    return {
-      status: constants.CODES.NOT_FOUND,
-      data: constants.MESSAGES.TASK_NOT_FOUND,
-    };
+    return deleteTaskFromDatabase(tasks, username, taskId);
+  }
+  return {
+    status: constants.CODES.NOT_FOUND,
+    data: constants.MESSAGES.TASK_NOT_FOUND,
+  };
+};
+
+/**
+ * The function deletes a specific task from a user's list of tasks in a database and returns a success
+ * message or a not found message.
+ * @param tasks - The `tasks` parameter is an object that represents a database of tasks. It has a
+ * `data` property that contains an object with usernames as keys and an array of tasks as values. Each
+ * task in the array has a `taskId` property that uniquely identifies it.
+ * @param username - The username is a string parameter that represents the name of the user whose task
+ * is to be deleted from the database.
+ * @param taskId - taskId is a unique identifier for a specific task in the tasks database. It is used
+ * to identify the task that needs to be deleted from the database.
+ * @returns an object with a `status` property and a `data` property. The `status` property indicates
+ * the status of the operation (either `constants.CODES.OK` or `constants.CODES.NOT_FOUND`) and the
+ * `data` property contains a message related to the status (either `constants.MESSAGES.TASK_DELETED`
+ * or `constants.MESSAGES.TASK_NOT_FOUND`).
+ */
+const deleteTaskFromDatabase = (tasks, username, taskId) => {
+  let intialTasksLength = tasks.data[username].length;
+  tasksOfUser = tasks.data[username].filter((task) => {
+    return task.taskId !== taskId;
+  });
+  if (intialTasksLength !== tasksOfUser.length) {
+    tasks.data[username] = tasksOfUser;
+    let result = writeJSON(process.env.TASKS_DATABASE_URL, tasks.data);
+    if (result.status === constants.CODES.OK)
+      return {
+        status: constants.CODES.OK,
+        data: constants.MESSAGES.TASK_DELETED,
+      };
+    return result;
   }
   return {
     status: constants.CODES.NOT_FOUND,
