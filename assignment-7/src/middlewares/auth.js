@@ -2,33 +2,32 @@
 const jwt = require("jsonwebtoken");
 const createLog = require("../helpers/createLog");
 const { debugLogger } = require("../utilities/logger");
+const { verifyJWTToken } = require("../utilities/jwtToken");
 require("dotenv");
+const constants = require("../../constants");
 
 /**
- * @summary This is a middleware function that checks for a valid JWT token in the request header and verifies
- * it using a secret key, and if valid, adds the user object to the request and passes control to the
- * next middleware function.
- * @param request - The request parameter is an object that represents the HTTP request made by the
- * client to the server. It contains information about the request such as the URL, headers, body, and
- * other details.
- * @param response - The `response` parameter is an object that represents the HTTP response that will
- * be sent back to the client. It contains methods and properties that allow you to set the status
- * code, headers, and body of the response. In this specific function, the `response` parameter is used
- * to send an error.
+ * This is an authentication middleware function in JavaScript that verifies a JWT token and username
+ * in the request header and logs the result.
+ * @param request - The request parameter represents the HTTP request made by the client to the server.
+ * It contains information such as the request method, headers, body, and URL.
+ * @param response - The response parameter is an object that represents the HTTP response that will be
+ * sent back to the client. It contains methods and properties that allow the server to send data back
+ * to the client, such as status codes, headers, and the response body.
  * @param next - `next` is a function that is called to pass control to the next middleware function in
- * the stack. If an error occurs or the request/response cycle is complete, `next` should be called to
- * move to the next middleware function.
- * @returns If there is no `jwtToken` in the request header, the function returns a response with a
- * status code of 401 and a message "Un-authenticated user". If there is a `jwtToken`, the function
- * tries to verify it using the "secretPrivateKey_Listify" key. If the verification is successful, the
- * `user` object is added to the request and the `next()` function.
- * @author @karthikeyan-cdw
+ * the stack. If `next()` is not called, the request will be left hanging and the client will not
+ * receive a response.
+ * @returns The `auth` function returns either a response with an error message and status code or
+ * calls the `next()` function to move on to the next middleware function.
  */
-function auth(request, response, next) {
+const auth = (request, response, next) => {
   debugLogger.info("BEGIN: Authentication");
   const jwtToken = request.header("x-auth-token");
   if (!jwtToken) {
-    const result = { status: 401, data: "Access Token Not Found in Header" };
+    const result = {
+      status: constants.CODES.UNAUTHORIZED,
+      data: constants.MESSAGES.AUTH_ACCESS_TOKEN_NOT_FOUND,
+    };
     createLog({
       ...result,
       requestStatus: response.statusMessage,
@@ -40,7 +39,10 @@ function auth(request, response, next) {
   }
   const username = request.header("username");
   if (!username) {
-    const result = { status: 401, data: "Username Not Found in Header" };
+    const result = {
+      status: constants.CODES.UNAUTHORIZED,
+      data: constants.MESSAGES.AUTH_USERNAME_NOT_FOUND,
+    };
     createLog({
       ...result,
       requestStatus: response.statusMessage,
@@ -51,10 +53,13 @@ function auth(request, response, next) {
     return response.status(result.status).send({ message: result.data });
   }
   try {
-    const user = jwt.verify(jwtToken, process.env.JWT_SECRET_KEY);
+    const user = verifyJWTToken(jwtToken.split(" ")[1].trim());
     request.user = user.username;
     if (request.user !== username) {
-      const result = { status: 400, data: "It's not your Access Token" };
+      const result = {
+        status: 400,
+        data: constants.MESSAGES.AUTH_ACCESS_TOKEN_MISMATCH,
+      };
       createLog({
         ...result,
         requestStatus: response.statusMessage,
@@ -64,7 +69,10 @@ function auth(request, response, next) {
       });
       return response.status(result.status).send({ message: result.data });
     }
-    const result = { status: 200, data: "Authentication Success" };
+    const result = {
+      status: constants.CODES.OK,
+      data: constants.MESSAGES.AUTH_SUCCESS,
+    };
     createLog({
       ...result,
       requestStatus: response.statusMessage,
@@ -78,15 +86,19 @@ function auth(request, response, next) {
     let result = {};
     if (error instanceof jwt.TokenExpiredError) {
       result = {
-        status: 401,
-        data: "Access Token Expired, Login Again",
-        error: `${error.status || 401} - ${error} - ${error.stack}`,
+        status: constants.CODES.UNAUTHORIZED,
+        data: constants.MESSAGES.AUTH_ACCESS_TOKEN_MISMATCH,
+        error: `${error.status || constants.CODES.UNAUTHORIZED} - ${error} - ${
+          error.stack
+        }`,
       };
     } else {
       result = {
-        status: 401,
-        data: "Invalid Access Token",
-        error: `${error.status || 401} - ${error} - ${error.stack}`,
+        status: constants.CODES.UNAUTHORIZED,
+        data: constants.MESSAGES.AUTH_ACCESS_TOKEN_INVALID,
+        error: `${error.status || constants.CODES.UNAUTHORIZED} - ${error} - ${
+          error.stack
+        }`,
       };
     }
     response.status(result.status).send({ message: result.data });
@@ -97,7 +109,8 @@ function auth(request, response, next) {
       ip: request.ip,
       method: request.method,
     });
+    debugLogger.info("END: Authentication");
   }
-}
+};
 
 module.exports = auth;

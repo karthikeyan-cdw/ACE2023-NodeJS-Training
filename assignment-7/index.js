@@ -2,11 +2,12 @@
 const express = require("express");
 const cors = require("cors");
 const createLog = require("./src/helpers/createLog");
+const auth = require("./src/middlewares/auth");
+const constants = require("./constants");
 
 // importing the routes
 const tasksRoute = require("./src/routes/tasks.routes");
-const loginRoute = require("./src/routes/login.routes");
-const signupRoute = require("./src/routes/signup.routes");
+const authRoute = require("./src/routes/auth.routes");
 
 // setting up the express app
 const app = express();
@@ -22,12 +23,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors(corsOptions));
 
-app.use("/tasks", tasksRoute);
-app.use("/login", loginRoute);
-app.use("/signup", signupRoute);
+// setting up routes
+app.use("/tasks", auth, tasksRoute);
+app.use("/auth", authRoute);
 app.use("/", (request, response) => {
-  const result = { status: 404, error: "This API wont serves this request" };
+  const result = {
+    status: constants.CODES.NOT_FOUND,
+    error: constants.MESSAGES.NO_SERVICE,
+  };
   response.status(result.status).send({ error: result.error });
   createLog(result);
 });
+
 module.exports = app;

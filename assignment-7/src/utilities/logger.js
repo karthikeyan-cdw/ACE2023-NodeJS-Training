@@ -1,5 +1,6 @@
 // importing required modules
 const { createLogger, format, transports } = require("winston");
+const { FILENAMES } = require("../../constants");
 
 // logger for logging errors
 const errorLogger = createLogger({
@@ -15,7 +16,7 @@ const errorLogger = createLogger({
       ),
     }),
     new transports.File({
-      filename: "./logs/errors.log",
+      filename: FILENAMES.LOGGER_ERROR,
       format: format.combine(
         format.timestamp({ format: "MMM-DD-YYYY HH:mm:ss" }),
         format.align(),
@@ -31,7 +32,7 @@ const errorLogger = createLogger({
 const warningLogger = createLogger({
   level: process.env.LOGGER_LEVEL_WARNING,
   transports: new transports.File({
-    filename: "./logs/warnings.log",
+    filename: FILENAMES.LOGGER_WARNING,
     format: format.combine(
       format.timestamp({ format: "MMM-DD-YYYY HH:mm:ss" }),
       format.align(),
@@ -47,7 +48,7 @@ const infoLogger = createLogger({
   level: process.env.LOGGER_LEVEL_INFO,
   transports: [
     new transports.File({
-      filename: "./logs/info.log",
+      filename: FILENAMES.LOGGER_INFO,
       format: format.combine(
         format.timestamp({ format: "MMM-DD-YYYY HH:mm:ss" }),
         format.align(),
@@ -72,7 +73,7 @@ const infoLogger = createLogger({
 const debugLogger = createLogger({
   level: process.env.LOGGER_LEVEL_DEBUG,
   transports: new transports.File({
-    filename: "./logs/debug.log",
+    filename: FILENAMES.LOGGER_DEBUG,
     format: format.combine(
       format.timestamp({ format: "MMM-DD-YYYY HH:mm:ss" }),
       format.align(),
