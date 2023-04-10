@@ -162,7 +162,6 @@ const deleteTask = (username, taskId) => {
   if (tasks.data[username] !== undefined) {
     let intialTasksLength = tasks.data[username].length;
     tasksOfUser = tasks.data[username].filter((task) => {
-      console.log(task.taskId, taskId, task.taskId !== taskId);
       return task.taskId !== taskId;
     });
     if (intialTasksLength !== tasksOfUser.length) {

@@ -54,7 +54,6 @@ const auth = (request, response, next) => {
   }
   try {
     const user = verifyJWTToken(jwtToken.split(" ")[1].trim());
-    console.log(user);
     request.user = user.username;
     if (request.user !== username) {
       const result = {
