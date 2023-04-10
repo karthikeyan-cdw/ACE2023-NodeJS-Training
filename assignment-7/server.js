@@ -1,7 +1,7 @@
 // importing the required modules
 const app = require("./index");
-const { writeJSON } = require("./src/utilities/JSONIO");
-const createLog = require("./src/helpers/createLog");
+const { writeJSON } = require("./src/utils/readWriteDatabase.util");
+const createLog = require("./src/utils/logger.util");
 const constants = require("./constants");
 const fs = require("fs");
 require("dotenv").config();

@@ -1,6 +1,6 @@
 // importing the required modules
 const Joi = require("joi");
-const createLog = require("../helpers/createLog");
+const createLog = require("../utils/logger.util");
 const constants = require("../../constants");
 
 /**
@@ -25,7 +25,7 @@ const validateTaskCreateMethod = (request, response, next) => {
     taskComments: Joi.array()
       .items({
         comment: Joi.string().min(3).max(1000).required(),
-        timestamp: Joi.date().default(Date.now).required(),
+        timestamp: Joi.date().timestamp().default(Date.now).required(),
       })
       .optional(),
   });
@@ -73,7 +73,7 @@ const validateTaskUpdateMethod = (request, response, next) => {
  */
 const validateUser = (request, response, next) => {
   const isValid = Joi.object({
-    username: Joi.string().max(30).required(),
+    username: Joi.string().max(30).trim().required(),
     password: Joi.string().min(8).max(30).required(),
   });
   validate(isValid, request.body, response, next);

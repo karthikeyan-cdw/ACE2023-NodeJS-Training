@@ -70,8 +70,8 @@ const processor = {
     return data;
   },
   page: (data, constraints) => {
-    const pNo = constraints.pageNo;
-    const pSize = constraints.pageSize;
+    const pNo = constraints.pageNo ?? 0;
+    const pSize = constraints.pageSize ?? 10;
     return data.slice(pNo * pSize, (pNo + 1) * pSize);
   },
 };

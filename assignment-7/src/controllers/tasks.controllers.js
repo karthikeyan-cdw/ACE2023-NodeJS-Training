@@ -1,6 +1,6 @@
 // importing required modules
-const createLog = require("../helpers/createLog");
-const { debugLogger } = require("../utilities/logger");
+const createLog = require("../utils/logger.util");
+const logger = require("../config/logger.config");
 const tasksServices = require("../services/tasks.services");
 const constants = require("../../constants");
 
@@ -14,7 +14,7 @@ const constants = require("../../constants");
  * server to set the status code, headers, and body of the response.
  */
 const addTask = (request, response) => {
-  debugLogger.info(`BEGIN: Service > addTask`);
+  logger.info(`BEGIN: Service > addTask`);
   let result = tasksServices.addTask(request.user, request.body);
   response.status(result.status).send({ message: result.data });
   createLog({
@@ -24,7 +24,7 @@ const addTask = (request, response) => {
     ip: request.ip,
     method: request.method,
   });
-  debugLogger.info(`END: Service > addTask`);
+  logger.info(`END: Service > addTask`);
 };
 
 /**
@@ -39,7 +39,7 @@ const addTask = (request, response) => {
  * status code, headers, and body of the response.
  */
 const getAllTasks = (request, response) => {
-  debugLogger.info(`BEGIN: Service > getAllTasks`);
+  logger.info(`BEGIN: Service > getAllTasks`);
   let result = tasksServices.getAllTasks(request.user, request.query);
   if (result.status === constants.CODES.OK)
     response.status(result.status).send(result.data);
@@ -51,7 +51,7 @@ const getAllTasks = (request, response) => {
     ip: request.ip,
     method: request.method,
   });
-  debugLogger.info(`END: Service > getAllTasks`);
+  logger.info(`END: Service > getAllTasks`);
 };
 
 /**
@@ -66,7 +66,7 @@ const getAllTasks = (request, response) => {
  * status code, headers, and body of the response.
  */
 const getTask = (request, response) => {
-  debugLogger.info(`BEGIN: Service > getTask`);
+  logger.info(`BEGIN: Service > getTask`);
   let result = tasksServices.getTask(request.user, request.params.taskId);
   if (result.status === constants.CODES.OK)
     response.status(result.status).send(result.data);
@@ -78,7 +78,7 @@ const getTask = (request, response) => {
     ip: request.ip,
     method: request.method,
   });
-  debugLogger.info(`END: Service > getTask`);
+  logger.info(`END: Service > getTask`);
 };
 
 /**
@@ -91,7 +91,7 @@ const getTask = (request, response) => {
  * server to set the status code, headers, and body of the response.
  */
 const updateTask = (request, response) => {
-  debugLogger.info(`BEGIN: Service > updateTask`);
+  logger.info(`BEGIN: Service > updateTask`);
   let result = tasksServices.updateTask(
     request.user,
     request.params.taskId,
@@ -105,7 +105,7 @@ const updateTask = (request, response) => {
     ip: request.ip,
     method: request.method,
   });
-  debugLogger.info(`END: Service > updateTask`);
+  logger.info(`END: Service > updateTask`);
 };
 
 /**
@@ -119,11 +119,11 @@ const updateTask = (request, response) => {
  * status code, headers, and body of the response.
  */
 const deleteTask = (request, response) => {
-  debugLogger.info(`BEGIN: Service > deleteTask`);
+  logger.info(`BEGIN: Service > deleteTask`);
   let result = tasksServices.deleteTask(request.user, request.params.taskId);
   response.status(result.status).send({ message: result.data });
   createLog(result);
-  debugLogger.info(`END: Service > deleteTask`);
+  logger.info(`END: Service > deleteTask`);
 };
 
 module.exports = {

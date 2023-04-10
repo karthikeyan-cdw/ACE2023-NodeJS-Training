@@ -1,6 +1,6 @@
 // importing required modules
-const { readJSON, writeJSON } = require("../utilities/JSONIO");
-const filterSortPage = require("../utilities/filterSortPage");
+const { readJSON, writeJSON } = require("../utils/readWriteDatabase.util");
+const filterSortPage = require("../utils/filterSortPage.util");
 const constants = require("../../constants");
 
 /**

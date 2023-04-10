@@ -1,7 +1,7 @@
 // importing the required modules
-const { readJSON, writeJSON } = require("../utilities/JSONIO");
-const { createHash, verifyHash } = require("../utilities/crypting");
-const { getJWTToken } = require("../utilities/jwtToken");
+const { readJSON, writeJSON } = require("../utils/readWriteDatabase.util");
+const { createHash, verifyHash } = require("../utils/cryptor.util");
+const { getJWTToken } = require("../utils/jwt.util");
 const constants = require("../../constants");
 
 /**

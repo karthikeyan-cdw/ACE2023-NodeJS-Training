@@ -1,6 +1,6 @@
 // importing the required modules
-const createLog = require("../helpers/createLog");
-const { debugLogger } = require("../utilities/logger");
+const createLog = require("../utils/logger.util");
+const logger = require("../config/logger.config");
 const {
   loginUserService,
   signupUserService,
@@ -22,8 +22,11 @@ const constants = require("../../constants");
  * a response with an error message. Additionally, it logs the result and request information.
  */
 const loginUser = (request, response) => {
-  debugLogger.info(`BEGIN: Service > loginUser`);
-  let result = loginUserService(request.body.username, request.body.password);
+  logger.info(`BEGIN: Service > loginUser`);
+  let result = loginUserService(
+    request.body.username.trim(),
+    request.body.password
+  );
   if (result.status === constants.CODES.OK)
     return response.status(result.status).send({ token: result.token });
   response.status(result.status).send({ message: result.data });
@@ -34,7 +37,7 @@ const loginUser = (request, response) => {
     ip: request.ip,
     method: request.method,
   });
-  debugLogger.info(`END: Service > loginUser`);
+  logger.info(`END: Service > loginUser`);
 };
 
 /**
@@ -53,8 +56,11 @@ const loginUser = (request, response) => {
  * using the `createLog` function and debug logs the beginning and end of the function execution.
  */
 const signupUser = (request, response) => {
-  debugLogger.info(`BEGIN: Service > signupUser`);
-  let result = signupUserService(request.body.username, request.body.password);
+  logger.info(`BEGIN: Service > signupUser`);
+  let result = signupUserService(
+    request.body.username.trim(),
+    request.body.password
+  );
   if (result.status === constants.CODES.OK)
     return response.status(result.status).send({ token: result.token });
   response.status(result.status).send({ message: result.data });
@@ -65,7 +71,7 @@ const signupUser = (request, response) => {
     ip: request.ip,
     method: request.method,
   });
-  debugLogger.info(`END: Service > signupUser`);
+  logger.info(`END: Service > signupUser`);
 };
 
 module.exports = {

@@ -33,10 +33,7 @@ const MESSAGES = {
 };
 
 const FILENAMES = {
-  LOGGER_ERROR: "./logs/error.log",
-  LOGGER_WARNING: "./logs/warning.log",
-  LOGGER_INFO: "./logs/info.log",
-  LOGGER_DEBUG: "./logs/debug.log",
+  LOGGER_FILE: "./logs/listify.log",
 };
 
 module.exports = { CODES, MESSAGES, FILENAMES };

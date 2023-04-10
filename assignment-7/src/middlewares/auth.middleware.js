@@ -1,8 +1,8 @@
 // importing the required modules
 const jwt = require("jsonwebtoken");
-const createLog = require("../helpers/createLog");
-const { debugLogger } = require("../utilities/logger");
-const { verifyJWTToken } = require("../utilities/jwtToken");
+const createLog = require("../utils/logger.util");
+const logger = require("../config/logger.config");
+const { verifyJWTToken } = require("../utils/jwt.util");
 require("dotenv");
 const constants = require("../../constants");
 
@@ -21,8 +21,8 @@ const constants = require("../../constants");
  * calls the `next()` function to move on to the next middleware function.
  */
 const auth = (request, response, next) => {
-  debugLogger.info("BEGIN: Authentication");
-  const jwtToken = request.header("x-auth-token");
+  logger.info("BEGIN: Authentication");
+  const jwtToken = request.header("Authorization");
   if (!jwtToken) {
     const result = {
       status: constants.CODES.UNAUTHORIZED,
@@ -54,6 +54,7 @@ const auth = (request, response, next) => {
   }
   try {
     const user = verifyJWTToken(jwtToken.split(" ")[1].trim());
+    console.log(user);
     request.user = user.username;
     if (request.user !== username) {
       const result = {
@@ -80,7 +81,7 @@ const auth = (request, response, next) => {
       ip: request.ip,
       method: request.method,
     });
-    debugLogger.info("END: Authentication");
+    logger.info("END: Authentication");
     next();
   } catch (error) {
     let result = {};
@@ -109,7 +110,7 @@ const auth = (request, response, next) => {
       ip: request.ip,
       method: request.method,
     });
-    debugLogger.info("END: Authentication");
+    logger.info("END: Authentication");
   }
 };
 

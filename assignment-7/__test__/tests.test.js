@@ -88,7 +88,7 @@ describe("access token validation", () => {
     it("should return username not found in header", async () => {
       const { statusCode, body } = await supertest(app)
         .post("/tasks/")
-        .set({ "x-auth-token": `Bearer ${payloads.jwtToken1}` })
+        .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
         .send(payloads.taskInput);
       expect(statusCode).toBe(constants.CODES.UNAUTHORIZED);
       expect(body).toEqual({
@@ -100,7 +100,7 @@ describe("access token validation", () => {
     it("should return username not found in header", async () => {
       const { statusCode, body } = await supertest(app)
         .post("/tasks/")
-        .set({ "x-auth-token": `Bearer ${payloads.jwtToken2}` })
+        .set({ Authorization: `Bearer ${payloads.jwtToken2}` })
         .set({ username: payloads.userInput2.username })
         .send(payloads.taskInput);
       expect(statusCode).toBe(constants.CODES.UNAUTHORIZED);
@@ -113,7 +113,7 @@ describe("access token validation", () => {
     it("should return invalid access token", async () => {
       const { statusCode, body } = await supertest(app)
         .post("/tasks/")
-        .set({ "x-auth-token": `Bearer ${"Dummy_token"}` })
+        .set({ Authorization: `Bearer ${"Dummy_token"}` })
         .set({ username: payloads.userInput2.username })
         .send(payloads.taskInput);
       expect(statusCode).toBe(constants.CODES.UNAUTHORIZED);
@@ -126,7 +126,7 @@ describe("access token validation", () => {
     it("should return it's not your access token", async () => {
       const { statusCode, body } = await supertest(app)
         .post("/tasks/")
-        .set({ "x-auth-token": `Bearer ${payloads.jwtToken1}` })
+        .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
         .set({ username: payloads.userInput2.username })
         .send(payloads.taskInput);
       expect(statusCode).toBe(constants.CODES.BAD_REQUEST);
@@ -142,7 +142,7 @@ describe("create task", () => {
     it("should return tasks created", async () => {
       const { statusCode, body } = await supertest(app)
         .post("/tasks/")
-        .set({ "x-auth-token": `Bearer ${payloads.jwtToken1}` })
+        .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
         .set({ username: payloads.userInput1.username })
         .send(payloads.taskInput);
       expect(statusCode).toBe(201);
@@ -153,7 +153,7 @@ describe("create task", () => {
     it("should return invalid data format", async () => {
       const { statusCode, body } = await supertest(app)
         .post("/tasks/")
-        .set({ "x-auth-token": `Bearer ${payloads.jwtToken1}` })
+        .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
         .set({ username: payloads.userInput1.username })
         .send(payloads.taskInputInvalidFormat);
       expect(statusCode).toBe(constants.CODES.BAD_REQUEST);
@@ -164,7 +164,7 @@ describe("create task", () => {
     it("should return no service", async () => {
       const { statusCode, body } = await supertest(app)
         .post("/tasks/garbage")
-        .set({ "x-auth-token": `Bearer ${payloads.jwtToken1}` })
+        .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
         .set({ username: payloads.userInput1.username })
         .send(payloads.taskInput);
       expect(statusCode).toBe(404);
@@ -178,7 +178,7 @@ describe("update task", () => {
     it("should return tasks updated", async () => {
       const { statusCode, body } = await supertest(app)
         .put(`/tasks/${payloads.taskInputUpdateTaskId}`)
-        .set({ "x-auth-token": `Bearer ${payloads.jwtToken1}` })
+        .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
         .set({ username: payloads.userInput1.username })
         .send(payloads.taskInputUpdate);
       expect(statusCode).toBe(constants.CODES.OK);
@@ -189,7 +189,7 @@ describe("update task", () => {
     it("should return invalid data format", async () => {
       const { statusCode, body } = await supertest(app)
         .put(`/tasks/${payloads.taskInputUpdateTaskId}`)
-        .set({ "x-auth-token": `Bearer ${payloads.jwtToken1}` })
+        .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
         .set({ username: payloads.userInput1.username })
         .send(payloads.taskInputInvalidFormat);
       expect(statusCode).toBe(constants.CODES.BAD_REQUEST);
@@ -200,7 +200,7 @@ describe("update task", () => {
     it("should return no task found", async () => {
       const { statusCode, body } = await supertest(app)
         .put(`/tasks/${payloads.taskInputUpdateTaskIdInvalid}`)
-        .set({ "x-auth-token": `Bearer ${payloads.jwtToken1}` })
+        .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
         .set({ username: payloads.userInput1.username })
         .send(payloads.taskInputUpdate);
       expect(statusCode).toBe(404);
@@ -214,7 +214,7 @@ describe("read all task", () => {
     it("should return list of tasks", async () => {
       const { statusCode, body } = await supertest(app)
         .get(`/tasks/`)
-        .set({ "x-auth-token": `Bearer ${payloads.jwtToken1}` })
+        .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
         .set({ username: payloads.userInput1.username })
         .send();
       expect(statusCode).toBe(constants.CODES.OK);
@@ -224,7 +224,7 @@ describe("read all task", () => {
     it("should return list of tasks matching the query params", async () => {
       const { statusCode, body } = await supertest(app)
         .get(`/tasks/?filter=[{"priority":1}]`)
-        .set({ "x-auth-token": `Bearer ${payloads.jwtToken1}` })
+        .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
         .set({ username: payloads.userInput1.username })
         .send();
       expect(statusCode).toBe(constants.CODES.OK);
@@ -237,7 +237,7 @@ describe("read task by id", () => {
     it("should return list of tasks", async () => {
       const { statusCode, body } = await supertest(app)
         .get(`/tasks/${payloads.taskInputReadTaskId}`)
-        .set({ "x-auth-token": `Bearer ${payloads.jwtToken1}` })
+        .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
         .set({ username: payloads.userInput1.username })
         .send();
       expect(statusCode).toBe(constants.CODES.OK);
@@ -247,7 +247,7 @@ describe("read task by id", () => {
     it("should return list of tasks", async () => {
       const { statusCode, body } = await supertest(app)
         .get(`/tasks/${payloads.taskInputReadTaskIdInvalid}`)
-        .set({ "x-auth-token": `Bearer ${payloads.jwtToken1}` })
+        .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
         .set({ username: payloads.userInput1.username })
         .send();
       expect(statusCode).toBe(404);
@@ -260,7 +260,7 @@ describe("delete task", () => {
     it("should return tasks updated", async () => {
       const { statusCode, body } = await supertest(app)
         .delete(`/tasks/${payloads.taskInputDeleteTaskId}`)
-        .set({ "x-auth-token": `Bearer ${payloads.jwtToken1}` })
+        .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
         .set({ username: payloads.userInput1.username })
         .send();
       expect(statusCode).toBe(constants.CODES.OK);
@@ -271,7 +271,7 @@ describe("delete task", () => {
     it("should return no task found", async () => {
       const { statusCode, body } = await supertest(app)
         .delete(`/tasks/${payloads.taskInputDeleteTaskIdInvalid}`)
-        .set({ "x-auth-token": `Bearer ${payloads.jwtToken1}` })
+        .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
         .set({ username: payloads.userInput1.username })
         .send();
       expect(statusCode).toBe(404);

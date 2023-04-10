@@ -1,8 +1,8 @@
 // importing the required modules
 const express = require("express");
 const cors = require("cors");
-const createLog = require("./src/helpers/createLog");
-const auth = require("./src/middlewares/auth");
+const createLog = require("./src/utils/logger.util");
+const auth = require("./src/middlewares/auth.middleware");
 const constants = require("./constants");
 
 // importing the routes

@@ -1,7 +1,7 @@
 // importing the required modules
 const express = require("express");
 const { loginUser, signupUser } = require("../controllers/auth.controllers.js");
-const { validateUser } = require("../middlewares/validate.js");
+const { validateUser } = require("../middlewares/validator.middleware.js");
 const constants = require("../../constants");
 
 // setting up the routes for the user auth process
