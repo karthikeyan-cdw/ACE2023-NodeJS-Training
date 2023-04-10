@@ -29,7 +29,7 @@ const validateTaskCreateMethod = (request, response, next) => {
       })
       .optional(),
   });
-  validate(isValid, request.body, next);
+  validate(isValid, request.body, response, next);
 };
 
 /**
@@ -56,7 +56,7 @@ const validateTaskUpdateMethod = (request, response, next) => {
       })
       .optional(),
   });
-  validate(isValid, request.body, next);
+  validate(isValid, request.body, response, next);
 };
 
 /**
@@ -76,7 +76,7 @@ const validateUser = (request, response, next) => {
     username: Joi.string().max(30).required(),
     password: Joi.string().min(8).max(30).required(),
   });
-  validate(isValid, request.body, next);
+  validate(isValid, request.body, response, next);
 };
 
 /**
@@ -94,7 +94,7 @@ const validateUser = (request, response, next) => {
  * an error details array is created and logged. Then, the response object is returned with the message
  * and error details. If there is no error, the `next()` function is called.
  */
-const validate = (isValid, data, next) => {
+const validate = (isValid, data, response, next) => {
   const validationResult = isValid.validate(data);
   if (validationResult.error !== undefined) {
     const result = {

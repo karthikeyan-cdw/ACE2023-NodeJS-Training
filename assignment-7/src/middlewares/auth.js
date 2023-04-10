@@ -54,6 +54,7 @@ const auth = (request, response, next) => {
   }
   try {
     const user = verifyJWTToken(jwtToken.split(" ")[1].trim());
+    console.log(user);
     request.user = user.username;
     if (request.user !== username) {
       const result = {
@@ -87,7 +88,7 @@ const auth = (request, response, next) => {
     if (error instanceof jwt.TokenExpiredError) {
       result = {
         status: constants.CODES.UNAUTHORIZED,
-        data: constants.MESSAGES.AUTH_ACCESS_TOKEN_MISMATCH,
+        data: constants.MESSAGES.AUTH_ACCESS_TOKEN_EXPIRED,
         error: `${error.status || constants.CODES.UNAUTHORIZED} - ${error} - ${
           error.stack
         }`,

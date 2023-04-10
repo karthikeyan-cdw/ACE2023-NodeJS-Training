@@ -8,7 +8,7 @@ const CODES = {
 };
 
 const MESSAGES = {
-  NO_SERVICE: "This API wont serves this request",
+  NO_SERVICE: "This API won't serves this request",
   USER_NOT_FOUND: "User Not Found",
   INVALID_PASSWORD: "Invalid Password",
   USER_EXISTS: "User Already Exists",

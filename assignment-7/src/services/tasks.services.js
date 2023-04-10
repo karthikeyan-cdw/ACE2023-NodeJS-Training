@@ -161,8 +161,11 @@ const deleteTask = (username, taskId) => {
   }
   if (tasks.data[username] !== undefined) {
     let intialTasksLength = tasks.data[username].length;
-    tasksOfUser = tasks.data[username].filter((task) => task.taskId !== taskId);
-    if (intialTasksLength !== tasks.data[username].length) {
+    tasksOfUser = tasks.data[username].filter((task) => {
+      console.log(task.taskId, taskId, task.taskId !== taskId);
+      return task.taskId !== taskId;
+    });
+    if (intialTasksLength !== tasksOfUser.length) {
       tasks.data[username] = tasksOfUser;
       let result = writeJSON(process.env.TASKS_DATABASE_URL, tasks.data);
       if (result.status === constants.CODES.OK)
