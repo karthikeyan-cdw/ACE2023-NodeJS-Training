@@ -1,7 +1,7 @@
 // importing required modules
 const { readJSON, writeJSON } = require("../utils/readWriteDatabase.util");
 const filterSortPage = require("../utils/filterSortPage.util");
-const constants = require("../../constants");
+const constants = require("../constants");
 
 /**
  * The function adds a new task to a user's task list in a JSON database and returns a success message

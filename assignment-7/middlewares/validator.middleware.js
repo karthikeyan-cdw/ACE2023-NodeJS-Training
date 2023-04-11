@@ -1,7 +1,7 @@
 // importing the required modules
 const Joi = require("joi");
 const createLog = require("../utils/logger.util");
-const constants = require("../../constants");
+const constants = require("../constants");
 
 /**
  * The function validates the request body for creating a task using Joi schema.

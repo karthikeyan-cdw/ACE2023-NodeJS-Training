@@ -2,7 +2,7 @@
 const createLog = require("../utils/logger.util");
 const logger = require("../config/logger.config");
 const tasksServices = require("../services/tasks.services");
-const constants = require("../../constants");
+const constants = require("../constants");
 
 /**
  * This function adds a task and logs the result.

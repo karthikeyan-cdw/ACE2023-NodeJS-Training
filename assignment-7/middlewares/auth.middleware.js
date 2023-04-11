@@ -4,7 +4,7 @@ const createLog = require("../utils/logger.util");
 const logger = require("../config/logger.config");
 const { verifyJWTToken } = require("../utils/jwt.util");
 require("dotenv");
-const constants = require("../../constants");
+const constants = require("../constants");
 
 /**
  * This is an authentication middleware function that verifies a JWT token and logs the request

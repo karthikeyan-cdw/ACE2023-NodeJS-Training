@@ -1,6 +1,6 @@
 // importing required modules
 const { createLogger, format, transports } = require("winston");
-const { FILENAMES } = require("../../constants");
+const { FILENAMES } = require("../constants");
 
 // creating a logger with logger configurations
 const logger = createLogger({

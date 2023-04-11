@@ -1,6 +1,6 @@
 // importing the required modules
 const fs = require("fs");
-const constants = require("../../constants");
+const constants = require("../constants");
 
 /**
  * The function writes input data to a JSON file and returns a status and message indicating success or

@@ -1,14 +1,16 @@
 // importing the required modules
 const app = require("./index");
-const { writeJSON } = require("./src/utils/readWriteDatabase.util");
-const createLog = require("./src/utils/logger.util");
+const { writeJSON } = require("./utils/readWriteDatabase.util");
+const createLog = require("./utils/logger.util");
 const constants = require("./constants");
 const fs = require("fs");
 require("dotenv").config();
 
+let appServer;
+
 if (process.env.STATUS === "test") {
   // starting up the server in test mode
-  app.listen(process.env.TEST_PORT, () => {
+  appServer = app.listen(process.env.TEST_PORT, () => {
     createLog({
       status: constants.CODES.OK,
       message: `Server has started listening in : ${process.env.HOST}:${process.env.TEST_PORT}/`,
@@ -17,6 +19,7 @@ if (process.env.STATUS === "test") {
     const users = [];
     writeJSON(process.env.TASKS_DATABASE_URL, tasks);
     writeJSON(process.env.USERS_DATABASE_URL, users);
+    appServer.close();
   });
 } else {
   // starting up the server in development mode
@@ -34,5 +37,4 @@ if (process.env.STATUS === "test") {
       writeJSON(process.env.USERS_DATABASE_URL, users);
   });
 }
-
 module.exports = app;

@@ -1,4 +1,4 @@
-const { getJWTToken } = require("../src/utils/jwt.util");
+const { getJWTToken } = require("../utils/jwt.util");
 
 const payloads = {
   userInput: {
@@ -77,5 +77,6 @@ const tokens = {
   jwtToken1: getJWTToken(payloads.userInput1.username),
   jwtToken2: getJWTToken(payloads.userInput2.username, "1ms"),
   jwtToken3: getJWTToken(payloads.userInput3.username, "1m"),
+  jwtTokenNewUser: getJWTToken(payloads.newUserInput.username, "1m"),
 };
 module.exports = { ...payloads, ...tokens };

@@ -5,7 +5,7 @@ const {
   loginUserService,
   signupUserService,
 } = require("../services/auth.services");
-const constants = require("../../constants");
+const constants = require("../constants");
 
 /**
  * This function logs in a user and returns a token if successful, otherwise it returns an error

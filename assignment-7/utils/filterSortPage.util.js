@@ -1,5 +1,5 @@
 // importing required modules
-const constants = require("../../constants");
+const constants = require("../constants");
 
 /**
  * The function filters, sorts, and paginates data based on given queries.

@@ -1,13 +1,13 @@
 // importing the required modules
 const express = require("express");
 const cors = require("cors");
-const createLog = require("./src/utils/logger.util");
-const auth = require("./src/middlewares/auth.middleware");
+const createLog = require("./utils/logger.util");
+const auth = require("./middlewares/auth.middleware");
 const constants = require("./constants");
 
 // importing the routes
-const tasksRoute = require("./src/routes/tasks.routes");
-const authRoute = require("./src/routes/auth.routes");
+const tasksRoute = require("./routes/tasks.routes");
+const authRoute = require("./routes/auth.routes");
 
 // setting up the express app
 const app = express();

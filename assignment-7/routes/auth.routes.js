@@ -2,7 +2,7 @@
 const express = require("express");
 const { loginUser, signupUser } = require("../controllers/auth.controllers.js");
 const { validateUser } = require("../middlewares/validator.middleware.js");
-const constants = require("../../constants");
+const constants = require("../constants");
 
 // setting up the routes for the user auth process
 const router = express.Router();

@@ -2,7 +2,7 @@
 const { readJSON, writeJSON } = require("../utils/readWriteDatabase.util");
 const { createHash, verifyHash } = require("../utils/cryptor.util");
 const { getJWTToken } = require("../utils/jwt.util");
-const constants = require("../../constants");
+const constants = require("../constants");
 
 /**
  * The function takes in a username and password, reads a JSON database of users, verifies the user's

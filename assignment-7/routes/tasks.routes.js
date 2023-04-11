@@ -11,7 +11,7 @@ const {
   validateTaskCreateMethod,
   validateTaskUpdateMethod,
 } = require("../middlewares/validator.middleware.js");
-const constants = require("../../constants.js");
+const constants = require("../constants.js");
 
 // setting up the routes for the tasks
 const router = express.Router();
