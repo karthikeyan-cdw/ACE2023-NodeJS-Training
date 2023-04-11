@@ -20,7 +20,23 @@ const corsOptions = {
 };
 
 app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
+
+// setting up the json parser and handling the json parser error if any occurs.
+app.use((request, response, next) => {
+  express.json()(request, response, (error) => {
+    if (error) {
+      const result = {
+        status: constants.CODES.BAD_REQUEST,
+        error: constants.MESSAGES.DATA_INVALID_FORMAT,
+      };
+      createLog(result);
+      return response.status(result.status).send({ error: result.error });
+    }
+    next();
+  });
+});
+
+// cors setup
 app.use(cors(corsOptions));
 
 // setting up routes
