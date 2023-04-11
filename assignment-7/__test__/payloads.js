@@ -1,4 +1,4 @@
-const { getJWTToken } = require("../src/utilities/jwtToken");
+const { getJWTToken } = require("../src/utils/jwt.util");
 
 const payloads = {
   userInput: {
@@ -44,8 +44,8 @@ const payloads = {
     priority: 1,
     dueDate: "2023/05/10",
     taskComments: [
-      { comment: "comment 1", timestamp: "2023/04/10" },
-      { comment: "comment2", timestamp: "2023/04/11" },
+      { comment: "comment 1", timestamp: "1681192404674" },
+      { comment: "comment2", timestamp: "1681192404674" },
     ],
   },
   taskInputInvalidFormat: {
@@ -54,8 +54,8 @@ const payloads = {
     priority: 1,
     dueDate: "2023/05/10",
     taskComments: [
-      { comment: "comment 1", timestamp: "2023/04/10" },
-      { comment: "comment2", timestamp: "2023/04/11" },
+      { comment: "comment 1", timestamp: "1681192404674" },
+      { comment: "comment2", timestamp: "1681192404674" },
     ],
   },
   taskInputUpdateTaskId: "1",
@@ -66,8 +66,8 @@ const payloads = {
     priority: 1,
     dueDate: "2023/05/10",
     taskComments: [
-      { comment: "comment 1", timestamp: "2023/04/10" },
-      { comment: "comment2", timestamp: "2023/04/11" },
+      { comment: "comment 1", timestamp: "1681192404674" },
+      { comment: "comment2", timestamp: "1681192404674" },
     ],
   },
   taskInputDeleteTaskId: "1",

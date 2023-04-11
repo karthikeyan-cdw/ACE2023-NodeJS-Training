@@ -84,18 +84,6 @@ describe("access token validation", () => {
       });
     });
   });
-  describe("given the payload with access token and without username", () => {
-    it("should return username not found in header", async () => {
-      const { statusCode, body } = await supertest(app)
-        .post("/tasks/")
-        .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
-        .send(payloads.taskInput);
-      expect(statusCode).toBe(constants.CODES.UNAUTHORIZED);
-      expect(body).toEqual({
-        message: constants.MESSAGES.AUTH_USERNAME_NOT_FOUND,
-      });
-    });
-  });
   describe("given the payload with access token and username but expired access token", () => {
     it("should return username not found in header", async () => {
       const { statusCode, body } = await supertest(app)
@@ -122,19 +110,6 @@ describe("access token validation", () => {
       });
     });
   });
-  describe("given the payload with access token and username but with other's access token", () => {
-    it("should return it's not your access token", async () => {
-      const { statusCode, body } = await supertest(app)
-        .post("/tasks/")
-        .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
-        .set({ username: payloads.userInput2.username })
-        .send(payloads.taskInput);
-      expect(statusCode).toBe(constants.CODES.BAD_REQUEST);
-      expect(body).toEqual({
-        message: constants.MESSAGES.AUTH_ACCESS_TOKEN_MISMATCH,
-      });
-    });
-  });
 });
 
 describe("create task", () => {
@@ -143,7 +118,6 @@ describe("create task", () => {
       const { statusCode, body } = await supertest(app)
         .post("/tasks/")
         .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
-        .set({ username: payloads.userInput1.username })
         .send(payloads.taskInput);
       expect(statusCode).toBe(201);
       expect(body).toEqual({ message: constants.MESSAGES.TASK_CREATED });
@@ -154,7 +128,6 @@ describe("create task", () => {
       const { statusCode, body } = await supertest(app)
         .post("/tasks/")
         .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
-        .set({ username: payloads.userInput1.username })
         .send(payloads.taskInputInvalidFormat);
       expect(statusCode).toBe(constants.CODES.BAD_REQUEST);
       expect(body).toHaveProperty("error");
@@ -165,7 +138,6 @@ describe("create task", () => {
       const { statusCode, body } = await supertest(app)
         .post("/tasks/garbage")
         .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
-        .set({ username: payloads.userInput1.username })
         .send(payloads.taskInput);
       expect(statusCode).toBe(404);
       expect(body).toHaveProperty("error");
@@ -179,7 +151,6 @@ describe("update task", () => {
       const { statusCode, body } = await supertest(app)
         .put(`/tasks/${payloads.taskInputUpdateTaskId}`)
         .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
-        .set({ username: payloads.userInput1.username })
         .send(payloads.taskInputUpdate);
       expect(statusCode).toBe(constants.CODES.OK);
       expect(body).toEqual({ message: constants.MESSAGES.TASK_UPDATED });
@@ -190,7 +161,6 @@ describe("update task", () => {
       const { statusCode, body } = await supertest(app)
         .put(`/tasks/${payloads.taskInputUpdateTaskId}`)
         .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
-        .set({ username: payloads.userInput1.username })
         .send(payloads.taskInputInvalidFormat);
       expect(statusCode).toBe(constants.CODES.BAD_REQUEST);
       expect(body).toHaveProperty("error");
@@ -201,7 +171,6 @@ describe("update task", () => {
       const { statusCode, body } = await supertest(app)
         .put(`/tasks/${payloads.taskInputUpdateTaskIdInvalid}`)
         .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
-        .set({ username: payloads.userInput1.username })
         .send(payloads.taskInputUpdate);
       expect(statusCode).toBe(404);
       expect(body).toEqual({ message: constants.MESSAGES.TASK_NOT_FOUND });
@@ -215,7 +184,6 @@ describe("read all task", () => {
       const { statusCode, body } = await supertest(app)
         .get(`/tasks/`)
         .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
-        .set({ username: payloads.userInput1.username })
         .send();
       expect(statusCode).toBe(constants.CODES.OK);
     });
@@ -225,7 +193,6 @@ describe("read all task", () => {
       const { statusCode, body } = await supertest(app)
         .get(`/tasks/?filter=[{"priority":1}]`)
         .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
-        .set({ username: payloads.userInput1.username })
         .send();
       expect(statusCode).toBe(constants.CODES.OK);
     });
@@ -238,7 +205,6 @@ describe("read task by id", () => {
       const { statusCode, body } = await supertest(app)
         .get(`/tasks/${payloads.taskInputReadTaskId}`)
         .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
-        .set({ username: payloads.userInput1.username })
         .send();
       expect(statusCode).toBe(constants.CODES.OK);
     });
@@ -248,7 +214,6 @@ describe("read task by id", () => {
       const { statusCode, body } = await supertest(app)
         .get(`/tasks/${payloads.taskInputReadTaskIdInvalid}`)
         .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
-        .set({ username: payloads.userInput1.username })
         .send();
       expect(statusCode).toBe(404);
     });
@@ -261,7 +226,6 @@ describe("delete task", () => {
       const { statusCode, body } = await supertest(app)
         .delete(`/tasks/${payloads.taskInputDeleteTaskId}`)
         .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
-        .set({ username: payloads.userInput1.username })
         .send();
       expect(statusCode).toBe(constants.CODES.OK);
       expect(body).toEqual({ message: constants.MESSAGES.TASK_DELETED });
@@ -272,7 +236,6 @@ describe("delete task", () => {
       const { statusCode, body } = await supertest(app)
         .delete(`/tasks/${payloads.taskInputDeleteTaskIdInvalid}`)
         .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
-        .set({ username: payloads.userInput1.username })
         .send();
       expect(statusCode).toBe(404);
       expect(body).toEqual({ message: constants.MESSAGES.TASK_NOT_FOUND });

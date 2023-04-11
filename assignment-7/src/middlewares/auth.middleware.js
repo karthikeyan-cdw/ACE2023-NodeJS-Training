@@ -24,9 +24,9 @@ const constants = require("../../constants");
  */
 const auth = (request, response, next) => {
   logger.info("BEGIN: Authentication");
-  const jwtToken = request.header("Authorization");
-  if (!jwtToken) return jwtNotFound();
   try {
+    const jwtToken = request.header("Authorization");
+    if (!jwtToken) return jwtNotFound();
     const user = verifyJWTToken(jwtToken.split(" ")[1].trim());
     request.user = user.username;
     const result = {
@@ -94,7 +94,9 @@ const handleError = (error, request, response) => {
     }`,
   };
   if (error instanceof jwt.TokenExpiredError)
-    result[data] = constants.MESSAGES.AUTH_ACCESS_TOKEN_EXPIRED;
+    result["data"] = constants.MESSAGES.AUTH_ACCESS_TOKEN_EXPIRED;
+  else if (error instanceof TypeError)
+    result["data"] = constants.MESSAGES.AUTH_ACCESS_TOKEN_NOT_FOUND;
   response.status(result.status).send({ message: result.data });
   createLog({
     ...result,
