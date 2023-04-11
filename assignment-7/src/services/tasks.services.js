@@ -27,7 +27,7 @@ const addTask = (username, data) => {
       tasks.data[username].push(data);
     } else
       return {
-        status: constants.CODES.UNAUTHORIZED,
+        status: constants.CODES.CONFLICT,
         data: constants.MESSAGES.TASK_EXISTS,
       };
   }

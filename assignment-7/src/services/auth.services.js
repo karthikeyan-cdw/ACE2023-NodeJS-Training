@@ -60,7 +60,7 @@ const signupUserService = (username, password) => {
     return result;
   }
   return {
-    status: constants.CODES.UNAUTHORIZED,
+    status: constants.CODES.CONFLICT,
     data: constants.MESSAGES.USER_EXISTS,
   };
 };

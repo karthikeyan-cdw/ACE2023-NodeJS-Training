@@ -18,7 +18,7 @@ describe("user registration", () => {
       const { statusCode, body } = await supertest(app)
         .post("/auth/signup/")
         .send(payloads.userInput);
-      expect(statusCode).toBe(constants.CODES.UNAUTHORIZED);
+      expect(statusCode).toBe(constants.CODES.CONFLICT);
       expect(body).toEqual({ message: constants.MESSAGES.USER_EXISTS });
     });
   });
@@ -121,6 +121,16 @@ describe("create task", () => {
         .send(payloads.taskInput);
       expect(statusCode).toBe(201);
       expect(body).toEqual({ message: constants.MESSAGES.TASK_CREATED });
+    });
+  });
+  describe("given the task payload with access token and username with valid body which already exists", () => {
+    it("should return tasks created", async () => {
+      const { statusCode, body } = await supertest(app)
+        .post("/tasks/")
+        .set({ Authorization: `Bearer ${payloads.jwtToken1}` })
+        .send(payloads.taskInput);
+      expect(statusCode).toBe(constants.CODES.CONFLICT);
+      expect(body).toEqual({ message: constants.MESSAGES.TASK_EXISTS });
     });
   });
   describe("given the task payload with access token and username with invalid body", () => {
